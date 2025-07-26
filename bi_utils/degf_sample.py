@@ -196,30 +196,30 @@ def sample(
                     )
                     next_token_logits_neg_2 = outputs_neg_2.logits[:, -1, :]
 
-                    # Wasserstein distance-based weighting
-                    p_dist = F.softmax(next_token_logits, dim=-1)
-                    q1_dist = F.softmax(next_token_logits_neg, dim=-1)
-                    q2_dist = F.softmax(next_token_logits_neg_2, dim=-1)
+                    # # Wasserstein distance-based weighting
+                    # p_dist = F.softmax(next_token_logits, dim=-1)
+                    # q1_dist = F.softmax(next_token_logits_neg, dim=-1)
+                    # q2_dist = F.softmax(next_token_logits_neg_2, dim=-1)
                     
-                    p_cdf = torch.cumsum(p_dist, dim=-1)
-                    q1_cdf = torch.cumsum(q1_dist, dim=-1)
-                    q2_cdf = torch.cumsum(q2_dist, dim=-1)
+                    # p_cdf = torch.cumsum(p_dist, dim=-1)
+                    # q1_cdf = torch.cumsum(q1_dist, dim=-1)
+                    # q2_cdf = torch.cumsum(q2_dist, dim=-1)
                     
-                    d1 = torch.sum(torch.abs(p_cdf - q1_cdf), dim=-1)
-                    d2 = torch.sum(torch.abs(p_cdf - q2_cdf), dim=-1)
+                    # d1 = torch.sum(torch.abs(p_cdf - q1_cdf), dim=-1)
+                    # d2 = torch.sum(torch.abs(p_cdf - q2_cdf), dim=-1)
                     
-                    epsilon = 1e-6
-                    d1_inv = 1.0 / (d1 + epsilon)
-                    d2_inv = 1.0 / (d2 + epsilon)
+                    # epsilon = 1e-6
+                    # d1_inv = 1.0 / (d1 + epsilon)
+                    # d2_inv = 1.0 / (d2 + epsilon)
                     
-                    weight_sum = d1_inv + d2_inv
-                    weight_q1 = d1_inv / weight_sum
-                    weight_q2 = d2_inv / weight_sum
+                    # weight_sum = d1_inv + d2_inv
+                    # weight_q1 = d1_inv / weight_sum
+                    # weight_q2 = d2_inv / weight_sum
                     
-                    weight_q1 = weight_q1.unsqueeze(-1).expand_as(next_token_logits_neg)
-                    weight_q2 = weight_q2.unsqueeze(-1).expand_as(next_token_logits_neg_2)
+                    # weight_q1 = weight_q1.unsqueeze(-1).expand_as(next_token_logits_neg)
+                    # weight_q2 = weight_q2.unsqueeze(-1).expand_as(next_token_logits_neg_2)
                     
-                    next_token_logits_neg = weight_q1 * next_token_logits_neg + weight_q2 * next_token_logits_neg_2
+                    # next_token_logits_neg = weight_q1 * next_token_logits_neg + weight_q2 * next_token_logits_neg_2
 
             # set decoding parameters
             degf_alpha_pos = model_kwargs.get("degf_alpha_pos") if model_kwargs.get("degf_alpha_pos") is not None else 3
